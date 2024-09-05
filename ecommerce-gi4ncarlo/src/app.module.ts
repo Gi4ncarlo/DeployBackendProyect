@@ -7,10 +7,12 @@ import { AuthModule } from './modules/Auth/Auth.module';
 import { userService } from './modules/Users/users.service';
 import { productsService } from './modules/Products/products.service';
 import { authService } from './modules/Auth/Auth.service';
+import { ProductsRepository } from './modules/Products/products.repository';
+import { UsersRepository } from './modules/Users/users.repository';
 
 @Module({
   imports: [UsersModule, ProductsModule, AuthModule],
   controllers: [],
-  providers: [userService, productsService, authService],
+  providers: [userService, productsService, authService, ProductsRepository, UsersRepository],
 })
 export class AppModule {}
