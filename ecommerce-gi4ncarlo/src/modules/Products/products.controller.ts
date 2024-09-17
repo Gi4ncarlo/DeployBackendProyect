@@ -8,10 +8,16 @@ import {
   Body,
   Query,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
+  ParseUUIDPipe,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { productsService } from './products.service';
-import { Product } from './product.interface';
 import { AuthGuard } from '../Auth/AuthGuard.guard';
+import { Productdto } from './Dtos/productDto.dto';
+import { IsUUID } from 'class-validator';
 
 @Controller('products')
 export class productsController {
@@ -31,9 +37,11 @@ export class productsController {
     return { data: products };
   }
 
+
   @UseGuards(AuthGuard)
   @Post()
-  postProducts(@Body() product: Product) {
+  @UsePipes(new ValidationPipe())
+  postProducts(@Body() product: Productdto) {
     return this.productServic.createProduct(product);
   }
 
@@ -46,11 +54,21 @@ export class productsController {
   @UseGuards(AuthGuard)
   @Delete(':id')
   deleteUsersById(@Param('id') id: string): any {
-    return this.productServic.deleteProductById(Number(id));
+    return this.productServic.remove(id);
   }
 
   @Get(':id')
-  getProductsById(@Param('id') id: string) {
-    return this.productServic.getProductById(Number(id));
+  async getProductsById(@Param('id', new ParseUUIDPipe()) id: string) {
+   const product = await this.productServic.getProductById(id);
+   if(!IsUUID(4, { each : true})){
+    throw new HttpException("UUID Invalida", HttpStatus.BAD_REQUEST)
+   }
+
+   if(!product){
+    throw new HttpException("Producto no encontrado", HttpStatus.NOT_FOUND)
+   }
+
+   return product;
   }
+    
 }

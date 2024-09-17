@@ -8,31 +8,32 @@ import {
   Param,
   Query,
   UseGuards,
+  ParseUUIDPipe,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
-import { userService } from './users.service';
-import { User } from './user.interface';
+import { UserService } from './users.service';
 import { UpdateUserDto } from './Dtos/updateUserDto.dto';
 import { AuthGuard } from '../Auth/AuthGuard.guard';
+import { createUserDto } from './Dtos/createUserDto.dto';
+import { IsUUID } from 'class-validator';
 
 @Controller('users')
 export class userController {
-  constructor(private readonly userServic: userService) {}
+  constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard)
   @Get()
   async getUsers(
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '5'
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10
 ) {
-    const pageNumber = parseInt(page, 10) || 1;
-    const limitNumber = parseInt(limit, 10) || 5; 
-    const users = await this.userServic.getUsers(pageNumber, limitNumber);
-    return { data: users };
+  return this.userService.getUsers(page, limit); 
 }
 
   @Post()
-  postUsers(@Body() user: User): any {
-    return this.userServic.createUser(user);
+  postUsers(@Body() user: createUserDto): any {
+    return this.userService.createUser(user);
   }
 
   @UseGuards(AuthGuard)
@@ -41,18 +42,27 @@ export class userController {
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): any {
-    return this.userServic.updateUser(Number(id), updateUserDto);
+    return this.userService.updateUser(id, updateUserDto);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
   deleteUsersById(@Param('id') id: string): any {
-    return this.userServic.deleteUserById(Number(id));
+    return this.userService.deleteUserById(id);
   }
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  getUserById(@Param('id') id: string): any {
-    return this.userServic.getUserById(Number(id));
+  async getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
+    const user = await this.userService.findOneBy(id);
+    if(!IsUUID(4, { each : true})){
+      throw new HttpException("UUID Invalida", HttpStatus.BAD_REQUEST)
+    }
+
+    if(!user){
+      throw new HttpException("Usuario no encontrado", HttpStatus.NOT_FOUND)
+    }
+
+    return user
   }
 }

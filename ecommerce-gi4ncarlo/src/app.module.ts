@@ -1,18 +1,35 @@
-/* eslint-disable prettier/prettier */
-
 import { Module } from '@nestjs/common';
 import { ProductsModule } from './modules/Products/Products.module';
 import { UsersModule } from './modules/Users/Users.module';
 import { AuthModule } from './modules/Auth/Auth.module';
-import { userService } from './modules/Users/users.service';
-import { productsService } from './modules/Products/products.service';
-import { authService } from './modules/Auth/Auth.service';
-import { ProductsRepository } from './modules/Products/products.repository';
-import { UsersRepository } from './modules/Users/users.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { OrderDetailsModule } from './modules/order-details/order-details.module';
+import { PostgresDataSourceConfig } from './config/data-source';
+import { SeedsModule } from './seeds/seeds.module';
 
 @Module({
-  imports: [UsersModule, ProductsModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [PostgresDataSourceConfig],
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        configService.get('postgres'),
+    }),
+    UsersModule,
+    ProductsModule,
+    AuthModule,
+    CategoriesModule,
+    OrdersModule,
+    OrderDetailsModule,
+    SeedsModule,
+  ],
   controllers: [],
-  providers: [userService, productsService, authService, ProductsRepository, UsersRepository],
+  providers: [],
 })
 export class AppModule {}

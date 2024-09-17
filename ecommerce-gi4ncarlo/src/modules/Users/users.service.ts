@@ -1,36 +1,59 @@
+
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from './users.repository';
-import { User } from './user.interface';
 import { UpdateUserDto } from './Dtos/updateUserDto.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './user.entity';
+import { createUserDto } from './Dtos/createUserDto.dto';
 
 @Injectable()
-export class userService {
+export class UserService {
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+      ) {}
 
-    constructor (private userRepository : UsersRepository){}
-    getUsers(page: number, limit: number) {
-        return this.userRepository.getUsers(page, limit);
+      async getUsers(page: number, limit: number) {
+        const skip = (page - 1) * limit; 
+
+        return await this.userRepository.find({
+            take : limit,
+            skip : skip,
+        })
     }
 
-    getUserById(id: number) {
-        return this.userRepository.getById(id);
+    async createUser(user: createUserDto): Promise <{name : string}> { //DEBE RETORNAR EL ID DEL USER CREADO ? 
+        
+        user.createdAt =  new Date().toString();
+        await this.userRepository.save(user)
+
+        return {name : user.name};
     }
 
-    createUser(user: Omit <User, "id">): Promise <{id : number}> {
-        return this.userRepository.createUser(user)
+    async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+      // Encuentra el usuario
+      const user = await this.userRepository.findOneBy({ id });
+     
+      // Verifica si el usuario existe
+      if (!user) {
+          throw new Error("Usuario no encontrado");
+      }
+      
+      // Actualiza el usuario
+      await this.userRepository.update(id, updateUserDto);
+      
+      // Obtiene el usuario actualizado
+      return await this.userRepository.findOneBy({ id });
+  }
+  
+
+   async findOneBy(userId: string): Promise<User> {
+        return await this.userRepository.findOneBy({ id: (userId) });
+      }
+
+   async deleteUserById(id: string): Promise <{id : string}> {
+      await this.userRepository.delete(id)
+        return {id}
     }
 
-    updateUser(id: number, updateUserDto: UpdateUserDto) : Promise <number> {
-        const user = this.userRepository.getById(id);
-       
-        if(!user){
-            console.log("Usuario no encontrado")
-        }
-
-        return this.userRepository.update(id, updateUserDto)
-
-    }
-
-    deleteUserById(id: number): Promise <number> {
-        return this.userRepository.deleteUserById(id)
-    }
 }
