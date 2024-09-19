@@ -13,15 +13,22 @@ import {
   ParseUUIDPipe,
   HttpException,
   HttpStatus,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { productsService } from './products.service';
 import { AuthGuard } from '../Auth/AuthGuard.guard';
 import { Productdto } from './Dtos/productDto.dto';
 import { IsUUID } from 'class-validator';
+import { CloudinaryService } from './cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('products')
 export class productsController {
-  constructor(private readonly productServic: productsService) {}
+  constructor(
+    private readonly productServic: productsService,
+    private readonly cloudinaryService : CloudinaryService
+  ) {}
 
   @Get()
   async getProducts(
@@ -45,6 +52,13 @@ export class productsController {
     return this.productServic.createProduct(product);
   }
 
+  @Post('files/uploadImage/:id')
+  @UseInterceptors(FileInterceptor("image"))
+  postProductImages(@UploadedFile() file : Express.Multer.File){
+    return this.cloudinaryService.uploadImage(file)
+  }
+
+  
   @UseGuards(AuthGuard)
   @Put(':id')
   putProductById(): any {
