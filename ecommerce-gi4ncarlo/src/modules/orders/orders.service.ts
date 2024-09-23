@@ -22,7 +22,7 @@ export class OrdersService {
 
   async create(createOrderDto: CreateOrderDto) {
     const { userId, products } = createOrderDto;
-    const user = await this.userService.findOneBy(userId);
+    const user = await this.userService.findOneById(userId);
 
     const order = { 
       user: user,

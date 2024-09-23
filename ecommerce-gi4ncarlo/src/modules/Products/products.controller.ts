@@ -15,6 +15,7 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  HttpCode,
 } from '@nestjs/common';
 import { productsService } from './products.service';
 import { AuthGuard } from '../Auth/AuthGuard.guard';
@@ -22,12 +23,14 @@ import { Productdto } from './Dtos/productDto.dto';
 import { IsUUID } from 'class-validator';
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { FileUploadService } from 'src/file-upload/file-upload.service';
+import { ImageUploadPipe } from 'src/pipes/image-upload/image-upload.pipe';
 
 @Controller('products')
 export class productsController {
   constructor(
     private readonly productServic: productsService,
-    private readonly cloudinaryService : CloudinaryService
+    private readonly fileUploadService : FileUploadService
   ) {}
 
   @Get()
@@ -52,13 +55,31 @@ export class productsController {
     return this.productServic.createProduct(product);
   }
 
-  @Post('files/uploadImage/:id')
-  @UseInterceptors(FileInterceptor("image"))
-  postProductImages(@UploadedFile() file : Express.Multer.File){
-    return this.cloudinaryService.uploadImage(file)
-  }
+  // @Post('files/uploadImage/:id')
+  // @UseInterceptors(FileInterceptor("image"))
+  // postProductImages(@UploadedFile() file : Express.Multer.File){
+  //   return this.cloudinaryService.uploadImage(file)
+  // }
 
+  @Post(":id/upload")
+  @HttpCode(200)
+  @UseInterceptors(FileInterceptor("file"))
+  async uploadFile(
+    @Param("id") id : string,
+    @UploadedFile(new ImageUploadPipe()) file : Express.Multer.File,
+  ){
+    console.log("En product controller" , id, file.size);
+    
+    return await this.productServic.uploadFile(file, id);
+  }
   
+@Get(":id/image")
+@HttpCode(200)
+async getImage(@Param("id") id : string){
+  return this.fileUploadService.getUrl(id);
+}
+
+
   @UseGuards(AuthGuard)
   @Put(':id')
   putProductById(): any {
@@ -84,5 +105,4 @@ export class productsController {
 
    return product;
   }
-    
 }

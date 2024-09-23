@@ -4,15 +4,14 @@ import { productsService } from './products.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './product.entity';
 import { CloudinaryService } from './cloudinary.service';
-import { CloudinaryConfig } from 'src/config/cloudinary';
+import { FileUploadService } from 'src/file-upload/file-upload.service';
+import { FileUploadModule } from 'src/file-upload/file-upload.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product])],
+  imports: [TypeOrmModule.forFeature([Product]), FileUploadModule],
   controllers: [productsController],
-  providers: [productsService, 
-    CloudinaryConfig,
-    CloudinaryService],
+  providers: [productsService, FileUploadService, CloudinaryService],
   exports : [productsService]
 })
 export class ProductsModule {}

@@ -11,16 +11,21 @@ import {
   ParseUUIDPipe,
   HttpException,
   HttpStatus,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UpdateUserDto } from './Dtos/updateUserDto.dto';
 import { AuthGuard } from '../Auth/AuthGuard.guard';
 import { createUserDto } from './Dtos/createUserDto.dto';
 import { IsUUID } from 'class-validator';
+import { authService } from '../Auth/Auth.service';
+import { RegisterUserDto } from './Dtos/RegisterUserDto.dto';
 
 @Controller('users')
 export class userController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService,
+    private readonly authService : authService
+  ){}
 
   @UseGuards(AuthGuard)
   @Get()
@@ -31,9 +36,9 @@ export class userController {
   return this.userService.getUsers(page, limit); 
 }
 
-  @Post()
-  postUsers(@Body() user: createUserDto): any {
-    return this.userService.createUser(user);
+  @Post("signup")
+  async signUp(@Body() loginUser: createUserDto) {
+    return this.authService.signUp(loginUser)
   }
 
   @UseGuards(AuthGuard)
@@ -54,7 +59,7 @@ export class userController {
   @UseGuards(AuthGuard)
   @Get(':id')
   async getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
-    const user = await this.userService.findOneBy(id);
+    const user = await this.userService.findOneById(id);
     if(!IsUUID(4, { each : true})){
       throw new HttpException("UUID Invalida", HttpStatus.BAD_REQUEST)
     }
@@ -65,4 +70,6 @@ export class userController {
 
     return user
   }
+
+
 }
