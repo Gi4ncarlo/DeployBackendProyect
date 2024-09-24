@@ -1,8 +1,11 @@
 /* eslint-disable prettier/prettier */
 
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { authService }  from "./Auth.service"
-import { RegisterUserDto } from "../Users/Dtos/RegisterUserDto.dto";
+import { SignInUserDto } from "../Users/Dtos/SignInUserDto.dto";
+import { signUpUserDto } from "../Users/Dtos/SignUpUserDto.dto";
+import { UserResponseDto } from "../Users/Dtos/response.user.dto";
+
 
 @Controller("auth")
 export class authController {
@@ -14,9 +17,16 @@ export class authController {
     // }
 
     @Post("/signin")
-    loginAuth(@Body() userSignIn : RegisterUserDto ): any{
+    loginAuth(@Body() userSignIn : SignInUserDto ): any{
       
         return this.authServic.signIn(userSignIn);
+    }
+
+    @Post("/signup")
+    @HttpCode(HttpStatus.CREATED)
+   async signUp(@Body() signUpUser : signUpUserDto){
+        const user = await this.authServic.signUp(signUpUser)
+        return new UserResponseDto(user)
     }
     
 }

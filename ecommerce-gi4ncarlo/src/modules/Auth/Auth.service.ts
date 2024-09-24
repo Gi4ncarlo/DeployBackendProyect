@@ -1,46 +1,78 @@
 /* eslint-disable prettier/prettier */
 
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { UserService } from '../Users/users.service';
 import { User } from '../Users/user.entity';
-import { RegisterUserDto } from '../Users/Dtos/RegisterUserDto.dto';
-import * as bcrypt from "bcrypt"
+import * as bcrypt from 'bcrypt';
+import { signUpUserDto } from '../Users/Dtos/SignUpUserDto.dto';
+import { SignInUserDto } from '../Users/Dtos/SignInUserDto.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class authService {
-  constructor(private readonly usersService: UserService) {}
+  constructor(
+    private readonly usersService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async signUp(user :  Omit<User , "id">)  {
-    const userFinded = await this.usersService.findUserByEmail(user.email);
+  async signUp(signUpUser: signUpUserDto) {
+    const userFinded = await this.usersService.findUserByEmail(
+      signUpUser.email,
+    );
 
     if (userFinded) {
       throw new BadRequestException('El usuario ya existe.');
     }
 
-    const hashedPassword = await bcrypt.hash(user.password, 10)
-    if(!hashedPassword){
-      throw new BadRequestException("Error en el hasheo de la password");
+    if (signUpUser.password !== signUpUser.passwordConfirm) {
+      throw new HttpException('Las contraseñas no coinciden.', 400);
     }
 
-    this.usersService.createUser({...user, password : hashedPassword})
-    return { success : "User creado correctamente!"}
+    signUpUser.password = await bcrypt.hash(signUpUser.password, 10);
+
+    if (!signUpUser.password) {
+      throw new BadRequestException('Error en el hasheo de la password');
+    }
+
+    const newUser = await this.usersService.createUser(signUpUser);
+    return newUser;
   }
 
-  async signIn(user: RegisterUserDto): Promise<any> {
-    const { email, password, confirmPassword } = user;
-    let mensaje = 'Ingreso exitoso!';
+  async signIn(credentials: SignInUserDto): Promise<any> {
+    const user = await this.usersService.findUserByEmail(credentials.email);
 
-    if (!email || !password) {
-      mensaje = 'Email o password incorrectos';
+    if (!user) {
+      throw new HttpException('User not found', 404);
     }
 
-    if (password !== confirmPassword) {
-      mensaje = 'Las contraseñas no coinciden.';
+    const isPasswordMatching = await bcrypt.compare(
+      credentials.password,
+      user.password,
+    );
+
+    if (!isPasswordMatching) {
+      throw new HttpException(
+        'Wrong credentials provided',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
-    if (!this.usersService.findUserByEmail(email)) {
-      throw new BadRequestException('Datos invalidos, usuario no Encontrado');
-    }
-    return mensaje;
+    const token = await this.createToken(user);
+
+    return { token };
+  }
+
+  private async createToken(user: User) {
+    const payload = {
+      id: user.id,
+      email: user.email,
+    };
+
+    return this.jwtService.signAsync(payload);
   }
 }

@@ -1,30 +1,37 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request>();
+  constructor(
+    private readonly jwtService : JwtService,
+    private readonly configService : ConfigService
+  ){}
 
-    // Verificar si el header Authorization está presente
-    const authorizationHeader = request.headers['authorization'];
-    if (!authorizationHeader) {
-      throw new UnauthorizedException('El header Authorization no fue enviado');
+  async canActivate(context: ExecutionContext): Promise <boolean> {
+    const request: Request = context.switchToHttp().getRequest();
+    const token = this.extractTokenFromHeader(request)
+
+    if(!token){
+      throw new UnauthorizedException("Token not founded")
     }
 
-    // Verificar que el formato del header sea "Basic: <email>:<password>"
-    const authParts = authorizationHeader.split(' ');
-    if (authParts[0] !== 'Basic' || authParts.length !== 2) {
-      throw new UnauthorizedException('Formato del header Authorization inválido');
+    try {
+      const payload = await this.jwtService.verifyAsync(
+        token,{
+        secret : this.configService.get<string>("JWT_SECRET")
+      });
+      request["user"] = payload;
+    } catch (error) {
+      throw new UnauthorizedException("Invalid Token")
     }
+    return true;  
+  }
 
-    // Verificar que tenga la estructura <email>:<password>
-    // const credentials = authParts[1].split(':');
-    // if (credentials.length !== 2) {
-    //   throw new UnauthorizedException('El header Authorization debe contener email y password separados por ":"');
-    // }
-
-    // No es necesario validar si el email y la password son correctos
-    return true;  // Permitir el acceso si la estructura es correcta
+  private extractTokenFromHeader(request : Request) : string | undefined {
+    const [type, token] = request.headers.authorization?.split(" ") ?? []
+    return type === "Bearer" ? token : undefined
   }
 }

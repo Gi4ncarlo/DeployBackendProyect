@@ -25,14 +25,11 @@ export class User {
     country : string;
 
     @Column()
-    adress : string;
+    address : string;
 
     @Column({ nullable : true})
     city : string;
 
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[];
-
-    @Column()
-    createdAt : string;
 }

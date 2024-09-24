@@ -19,7 +19,6 @@ import { AuthGuard } from '../Auth/AuthGuard.guard';
 import { createUserDto } from './Dtos/createUserDto.dto';
 import { IsUUID } from 'class-validator';
 import { authService } from '../Auth/Auth.service';
-import { RegisterUserDto } from './Dtos/RegisterUserDto.dto';
 
 @Controller('users')
 export class userController {

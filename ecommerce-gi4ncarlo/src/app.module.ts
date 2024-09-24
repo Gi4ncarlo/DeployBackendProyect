@@ -10,6 +10,7 @@ import { OrderDetailsModule } from './modules/order-details/order-details.module
 import { PostgresDataSourceConfig } from './config/data-source';
 import { SeedsModule } from './seeds/seeds.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { SharedModule } from './shared/shared/shared.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     OrderDetailsModule,
     SeedsModule,
     FileUploadModule,
+    SharedModule,
   ],
   controllers: [],
   providers: [],

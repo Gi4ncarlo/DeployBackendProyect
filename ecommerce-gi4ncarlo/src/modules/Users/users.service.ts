@@ -22,12 +22,11 @@ export class UserService {
         })
     }
 
-    async createUser(user: createUserDto): Promise <{name : string}> { //DEBE RETORNAR EL ID DEL USER CREADO ? 
+    async createUser(user: createUserDto): Promise <User> { //DEBE RETORNAR EL ID DEL USER CREADO ? 
         
-        user.createdAt =  new Date().toString();
-        await this.userRepository.save(user)
-
-        return {name : user.name};
+        const newUser = this.userRepository.create(user)
+      
+        return   await this.userRepository.save(newUser)
     }
 
     async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {

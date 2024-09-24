@@ -9,7 +9,7 @@ export class ImageUploadPipe implements PipeTransform {
     "image/gif"
   ]
 
-  private readonly maxSizeInBytes = 200000000
+  private readonly maxSizeInBytes = 200000
   transform(file : Express.Multer.File) {
     if(!file){
       throw new BadRequestException("No file Uploaded");
