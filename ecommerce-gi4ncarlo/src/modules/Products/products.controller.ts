@@ -25,6 +25,7 @@ import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
 import { ImageUploadPipe } from 'src/pipes/image-upload/image-upload.pipe';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 
 @Controller('products')
 export class productsController {
@@ -93,6 +94,8 @@ async getImage(@Param("id") id : string){
   }
 
   @Get(':id')
+  @HttpCode(200)
+  @UseGuards(RolesGuard)
   async getProductsById(@Param('id', new ParseUUIDPipe()) id: string) {
    const product = await this.productServic.getProductById(id);
    if(!IsUUID(4, { each : true})){

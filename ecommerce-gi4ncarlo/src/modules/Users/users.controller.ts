@@ -19,6 +19,7 @@ import { AuthGuard } from '../Auth/AuthGuard.guard';
 import { createUserDto } from './Dtos/createUserDto.dto';
 import { IsUUID } from 'class-validator';
 import { authService } from '../Auth/Auth.service';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 
 @Controller('users')
 export class userController {
@@ -26,8 +27,8 @@ export class userController {
     private readonly authService : authService
   ){}
 
-  @UseGuards(AuthGuard)
   @Get()
+  @UseGuards(AuthGuard, RolesGuard)
   async getUsers(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10
@@ -62,13 +63,10 @@ export class userController {
     if(!IsUUID(4, { each : true})){
       throw new HttpException("UUID Invalida", HttpStatus.BAD_REQUEST)
     }
-
     if(!user){
       throw new HttpException("Usuario no encontrado", HttpStatus.NOT_FOUND)
     }
-
     return user
   }
-
 
 }
