@@ -21,7 +21,11 @@ import { createUserDto } from './Dtos/createUserDto.dto';
 import { IsUUID } from 'class-validator';
 import { authService } from '../Auth/Auth.service';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+
+@ApiBearerAuth()
+@ApiTags("users")
 @Controller('users')
 export class userController {
   constructor(private readonly userService: UserService,

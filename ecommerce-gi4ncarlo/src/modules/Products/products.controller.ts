@@ -19,14 +19,18 @@ import {
 } from '@nestjs/common';
 import { productsService } from './products.service';
 import { AuthGuard } from '../Auth/AuthGuard.guard';
-import { Productdto } from './Dtos/productDto.dto';
+import { ProductDto } from './Dtos/productDto.dto';
 import { IsUUID } from 'class-validator';
 import { CloudinaryService } from './cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
 import { ImageUploadPipe } from 'src/pipes/image-upload/image-upload.pipe';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+
+@ApiBearerAuth()
+@ApiTags("products")
 @Controller('products')
 export class productsController {
   constructor(
@@ -52,7 +56,7 @@ export class productsController {
   @UseGuards(AuthGuard)
   @Post()
   @UsePipes(new ValidationPipe())
-  postProducts(@Body() product: Productdto) {
+  postProducts(@Body() product: ProductDto) {
     return this.productServic.createProduct(product);
   }
 

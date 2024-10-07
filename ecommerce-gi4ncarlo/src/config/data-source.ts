@@ -9,9 +9,9 @@ dotenv.config({
 const SqliteTestDataSourceOptions: DataSourceOptions = {
     type: "sqlite",
     database: ":memory:",
-    entities: [__dirname + "/../**/*..entity{.ts,.js}"],
+    entities: [__dirname + "/../**/*.entity{.ts,.js}"],
     synchronize: true,
-    dropSchema: true
+    //dropSchema: true
 }
 
 const PostgresDataSourceOptions : DataSourceOptions = {
@@ -26,7 +26,7 @@ const PostgresDataSourceOptions : DataSourceOptions = {
     entities: [__dirname + "/../**/*.entity{.ts,.js}"],
     migrations:["dist/migration/*{.ts,.js}"],
     subscribers : [],
-    dropSchema : true,
+    //dropSchema : true,
     //ssl: true
 }
 

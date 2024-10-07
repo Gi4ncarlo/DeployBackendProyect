@@ -18,7 +18,7 @@ export class OrderDetailsService {
   ): Promise<OrderDetail> {
     // Crear la entidad OrderDetail a partir del DTO
     const orderDetail =
-      this.orderDetailsRepository.create(createOrderDetailDto);
+     this.orderDetailsRepository.create(createOrderDetailDto);
 
     // Guardar la entidad en la base de datos
     const savedOrderDetail =
