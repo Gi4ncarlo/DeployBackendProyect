@@ -7,4 +7,8 @@ export class SignInUserDto {
 
     @IsNotEmpty()
     password : string;
+
+    constructor(partial: Partial<SignInUserDto> ){{
+        Object.assign(this, partial)
+    }}
 }

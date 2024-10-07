@@ -12,6 +12,7 @@ import {
   HttpException,
   HttpStatus,
   UseInterceptors,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UpdateUserDto } from './Dtos/updateUserDto.dto';
@@ -27,13 +28,20 @@ export class userController {
     private readonly authService : authService
   ){}
 
+//   @Get()
+//   @UseGuards(AuthGuard, RolesGuard)
+//   async getUsers(
+//     @Query('page') page: number = 1,
+//     @Query('limit') limit: number = 10
+// ) {
+//   return this.userService.getUsers(page, limit); 
+// }
+
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
-  async getUsers(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10
-) {
-  return this.userService.getUsers(page, limit); 
+  @HttpCode(200)
+  async getUsers() {
+  return this.userService.getAllUsers(); 
 }
 
   @Post("signup")

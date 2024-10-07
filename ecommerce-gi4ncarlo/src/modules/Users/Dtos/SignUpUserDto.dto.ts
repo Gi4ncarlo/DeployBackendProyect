@@ -46,4 +46,8 @@ export class signUpUserDto {
 
     orders_id? : string;
 
+    constructor(partial: Partial<signUpUserDto> ){{
+        Object.assign(this, partial)
+    }}
+
 }

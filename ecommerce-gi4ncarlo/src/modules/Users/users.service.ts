@@ -22,6 +22,10 @@ export class UserService {
         })
     }
 
+    async getAllUsers(){
+        return await this.userRepository.find();
+    }
+    
     async createUser(user: createUserDto): Promise <User> { //DEBE RETORNAR EL ID DEL USER CREADO ? 
         
         const newUser = this.userRepository.create(user)

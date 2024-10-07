@@ -1,4 +1,4 @@
-import { Category } from "src/modules/categories/entities/category.entity";
+import { Category } from "../../modules/categories/entities/category.entity";
 import { categories } from "./categories-mock";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";

@@ -8,7 +8,7 @@ import { Role } from "./enum/role.enum";
 })
 export class User {
     @PrimaryGeneratedColumn("uuid")
-    id : string = uuid();
+    id : string;
 
     @Column()
     name : string;
@@ -34,6 +34,9 @@ export class User {
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[];
 
-    @Column({ type: "enum", enum: Role, default: Role.User})
-    administrador: Role;
+    // @Column({ type: "enum", enum: Role, default: Role.User})
+    // administrador: Role;
+
+    @Column()
+    administrador : string = Role.User
 }
