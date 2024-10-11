@@ -27,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v2  # Versión v2 más estable
         with:
           context: .
-          file: Dockerfile
+          file: ./ecommerce-gi4ncarlo/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/nestjs-backend-pt21a:1.0
 
