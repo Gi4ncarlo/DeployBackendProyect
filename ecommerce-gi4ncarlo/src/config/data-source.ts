@@ -28,6 +28,7 @@ const PostgresDataSourceOptions : DataSourceOptions = {
     subscribers : [],
     //dropSchema : true,
 <<<<<<< HEAD
+<<<<<<< HEAD
     ssl: {
         rejectUnauthorized: false,
 =======
@@ -35,6 +36,9 @@ const PostgresDataSourceOptions : DataSourceOptions = {
         rejectUnauthorized: false, // Esto evita errores en desarrollo si no se confía en el certificado
 >>>>>>> 8c7e4bb0122f9cdab7b2868c218f904f6d8861de
     },
+=======
+    //ssl: true
+>>>>>>> parent of 13e7e0f (Update data-source.ts SSL)
 }
 
 export const PostgresDataSourceConfig = registerAs(
