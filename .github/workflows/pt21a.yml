@@ -27,8 +27,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+          file: Dockerfile
           push: true
-          tags: ${{secrets.DOCKERHUB_USERNAME}}/nestjs-backend-pt21a:1.0
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nestjs-backend-pt21a:1.0
 
 
       ## Deploy to render
