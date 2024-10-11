@@ -2,7 +2,7 @@ FROM node:18-alpine AS development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 RUN npm ci
 
@@ -12,7 +12,7 @@ FROM node:18-alpine AS build
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 COPY --from=development /usr/src/app/node_modules ./node_modules
 
