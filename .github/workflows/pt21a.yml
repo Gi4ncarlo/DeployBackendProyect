@@ -12,33 +12,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-##Upload to dockerHub
+      ## Upload to DockerHub
 
       - name: Set up docker Build
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Log in to docker hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with: 
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
 
       - name: Build and push docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/nestjs-backend-pt21a:1.0
 
-
-      ## Deploy to render
+      ## Deploy to Render
 
       - name: Deploy to render
-        uses: johnbeynon/render-deploy-action@v0.0.8
+        uses: johnbeynon/render-deploy-action@v0.0.10
         with: 
           service-id: ${{secrets.RENDER_SERVICE_ID}}
           api-key: ${{secrets.RENDER_API_KEY}}
-          wait-for-succes: true
-          
+          wait-for-success: true
+
     
