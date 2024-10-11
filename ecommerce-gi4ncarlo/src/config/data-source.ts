@@ -27,8 +27,13 @@ const PostgresDataSourceOptions : DataSourceOptions = {
     migrations:["dist/migration/*{.ts,.js}"],
     subscribers : [],
     //dropSchema : true,
+<<<<<<< HEAD
     ssl: {
         rejectUnauthorized: false,
+=======
+       ssl: {
+        rejectUnauthorized: false, // Esto evita errores en desarrollo si no se confía en el certificado
+>>>>>>> 8c7e4bb0122f9cdab7b2868c218f904f6d8861de
     },
 }
 
