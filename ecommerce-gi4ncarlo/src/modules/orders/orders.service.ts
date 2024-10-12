@@ -47,7 +47,7 @@ export class OrdersService {
   }
 
   private async calculateTotal(products : Array<ProductId>) : Promise<number>{
-    let total = 0;
+    let total : number = 0;
     for(const product of products) {
       total += await this.productService.buyProduct(product.id);
     }

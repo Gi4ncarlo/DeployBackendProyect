@@ -13,8 +13,8 @@ async function bootstrap() {
   //SWAGGER
   const swaggerConfig = new DocumentBuilder()
   .setTitle("Nest PT21A")
-  .setDescription("Demo app for cohor for m4 backend")
-  .setVersion("1.0")
+  .setDescription("Demo Para testear proyecto Backend")
+  .setVersion("1.11")
   .addBearerAuth()
   .build()
 

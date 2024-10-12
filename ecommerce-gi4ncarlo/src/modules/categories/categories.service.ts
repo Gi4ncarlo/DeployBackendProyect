@@ -17,20 +17,12 @@ export class CategoriesService {
     return 'This action adds a new category';
   }
 
-  // createSeeder(categorias : any) {
-  //   return this.categoriesRepository.addCategories(categorias);
-  // }
-
-  // getCategories() {
-  //   return this.categoriesRepository.getCategories();
-  // }
-
   findAll() {
-    return `This action returns all categories`;
+    return this.categoryRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  findOne(id: string) {
+    return this.categoryRepository.findOneBy({id});
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {

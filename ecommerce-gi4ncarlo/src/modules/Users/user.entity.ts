@@ -6,8 +6,8 @@ import { Role } from "./enum/role.enum";
 @Entity({
     name: "users",
 })
+
 export class User {
-    
     @ApiProperty({
         type: String,
         description: "Unique identifier for the user",

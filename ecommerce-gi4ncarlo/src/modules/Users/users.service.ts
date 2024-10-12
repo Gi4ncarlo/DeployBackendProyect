@@ -30,28 +30,45 @@ export class UserService {
         
         const newUser = this.userRepository.create(user)
       
-        return   await this.userRepository.save(newUser)
+        return await this.userRepository.save(newUser)
     }
 
-    async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-      // Encuentra el usuario
-      const user = await this.userRepository.findOneBy({ id });
-     
-      // Verifica si el usuario existe
-      if (!user) {
-          throw new Error("Usuario no encontrado");
-      }
-      
-      // Actualiza el usuario
-      await this.userRepository.update(id, updateUserDto);
-      
-      // Obtiene el usuario actualizado
-      return await this.userRepository.findOneBy({ id });
-  }
+    async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
+        // Encuentra el usuario
+        const user = await this.userRepository.findOneBy({ id });
+       
+        // Verifica si el usuario existe
+        if (!user) {
+            return null; // Retorna null si el usuario no se encuentra
+        }
+    
+        // Actualiza el usuario
+        await this.userRepository.update(id, updateUserDto);
+        
+        // Obtiene el usuario actualizado
+        return await this.userRepository.findOneBy({ id });
+    }
   
 
-   async findOneById(userId: string): Promise<User> {
-        return await this.userRepository.findOneBy({ id: (userId) });
+    async findOneById(userId: string): Promise<User> {
+        return await this.userRepository.findOne({
+          where: { id: userId },
+          relations: ['orders'], // Incluye las órdenes relacionadas
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            country: true,
+            address: true,
+            city: true,
+            administrador: true,
+            orders: {
+              id: true,
+              date: true, // Selecciona solo el id y la fecha de las órdenes
+            },
+          },
+        });
       }
 
     async findUserByEmail(email : string) : Promise<User> {

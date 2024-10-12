@@ -13,6 +13,7 @@ import {
   HttpStatus,
   UseInterceptors,
   HttpCode,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UpdateUserDto } from './Dtos/updateUserDto.dto';
@@ -55,11 +56,15 @@ export class userController {
 
   @UseGuards(AuthGuard)
   @Put(':id')
-  putUsersById(
+  async putUsersById(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): any {
-    return this.userService.updateUser(id, updateUserDto);
+  ): Promise<any> {
+    const userActualizado = await this.userService.updateUser(id, updateUserDto);
+    if (!userActualizado) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    return userActualizado;
   }
 
   @UseGuards(AuthGuard)

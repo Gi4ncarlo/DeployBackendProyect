@@ -22,7 +22,7 @@ export class OrderDetail {
     description: "Price of the order detail",
     example: 29.99,
   })
-  @Column()
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
   @ApiProperty({

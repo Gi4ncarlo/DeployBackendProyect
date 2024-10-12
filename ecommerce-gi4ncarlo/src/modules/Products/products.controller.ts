@@ -66,6 +66,7 @@ export class productsController {
   //   return this.cloudinaryService.uploadImage(file)
   // }
 
+  @UseGuards(AuthGuard)
   @Post(":id/upload")
   @HttpCode(200)
   @UseInterceptors(FileInterceptor("file"))
@@ -78,6 +79,7 @@ export class productsController {
     return await this.productServic.uploadFile(file, id);
   }
   
+@UseGuards(AuthGuard)  
 @Get(":id/image")
 @HttpCode(200)
 async getImage(@Param("id") id : string){
@@ -99,7 +101,7 @@ async getImage(@Param("id") id : string){
 
   @Get(':id')
   @HttpCode(200)
-  @UseGuards(RolesGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   async getProductsById(@Param('id', new ParseUUIDPipe()) id: string) {
    const product = await this.productServic.getProductById(id);
    if(!IsUUID(4, { each : true})){
