@@ -31,6 +31,7 @@ async function bootstrap() {
   console.log("La inserción de productos ha terminado.");
 
 
+  console.log('CONECTADO A LA BASE DE DATOS:', process.env.DB_NAME);
 
 
 

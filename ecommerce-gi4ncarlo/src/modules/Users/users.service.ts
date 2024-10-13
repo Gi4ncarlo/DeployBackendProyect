@@ -28,7 +28,7 @@ export class UserService {
     
     async createUser(user: createUserDto): Promise <User> { //DEBE RETORNAR EL ID DEL USER CREADO ? 
         
-        const newUser = this.userRepository.create(user)
+        const newUser = await this.userRepository.create(user)
       
         return await this.userRepository.save(newUser)
     }
@@ -50,27 +50,26 @@ export class UserService {
     }
   
 
-    async findOneById(userId: string): Promise<User> {
-        return await this.userRepository.findOne({
-          where: { id: userId },
-          relations: ['orders'], // Incluye las órdenes relacionadas
-          select: {
+    async findOneById(userId: string): Promise<Partial<User>> {
+      return await this.userRepository.findOne({
+        where: { id: userId },
+        relations: ['orders'], // Incluye las órdenes relacionadas
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          country: true,
+          address: true,
+          city: true,
+          orders: {
             id: true,
-            name: true,
-            email: true,
-            phone: true,
-            country: true,
-            address: true,
-            city: true,
-            administrador: true,
-            orders: {
-              id: true,
-              date: true, // Selecciona solo el id y la fecha de las órdenes
-            },
+            date: true, 
           },
-        });
-      }
-
+        },
+      });
+    }
+    
     async findUserByEmail(email : string) : Promise<User> {
         return await this.userRepository.findOne({
             where : {email}

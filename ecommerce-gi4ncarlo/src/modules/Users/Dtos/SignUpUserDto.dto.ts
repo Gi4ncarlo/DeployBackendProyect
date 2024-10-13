@@ -6,6 +6,8 @@ export class signUpUserDto {
         type: String,
         description : "Name of user",
         required : true,
+        minLength: 3,
+        maxLength: 80,
     })
     @IsNotEmpty()
     @IsString()
@@ -17,6 +19,7 @@ export class signUpUserDto {
         description : "Email of user",
         required : true,
     })
+    
     @IsNotEmpty()
     @IsEmail()
     email : string;

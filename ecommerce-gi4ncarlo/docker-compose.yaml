@@ -36,6 +36,8 @@ services:
       - "8080:80"
     depends_on:
       - postgres
+    networks:
+      - pt21a-network
 
 volumes:
   postgres_data:

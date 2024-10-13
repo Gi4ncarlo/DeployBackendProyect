@@ -68,8 +68,15 @@ export class OrdersService {
     return orderDetail
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async update(id: string, updateOrderDto: UpdateOrderDto) {
+    const order = await this.ordersRepository.findOneBy({id});
+
+    if(!order){
+      return null;
+    }
+
+    return order;
+
   }
 
   remove(id: number) {

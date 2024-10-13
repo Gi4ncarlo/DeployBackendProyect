@@ -17,12 +17,12 @@ export class CategoriesService {
     return 'This action adds a new category';
   }
 
-  findAll() {
-    return this.categoryRepository.find()
+  async findAll() {
+    return await this.categoryRepository.find()
   }
 
-  findOne(id: string) {
-    return this.categoryRepository.findOneBy({id});
+  async findOne(id: string) {
+    return await this.categoryRepository.findOneBy({id});
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {

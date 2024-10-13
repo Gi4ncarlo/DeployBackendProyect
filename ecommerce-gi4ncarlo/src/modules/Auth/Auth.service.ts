@@ -64,7 +64,7 @@ export class authService {
 
     const token = await this.createToken(user);
 
-    return { token };
+    return { token }
   }
 
   private async createToken(user: User) {
@@ -73,7 +73,13 @@ export class authService {
       email: user.email,
       roles: user.administrador,
     };
-
-    return this.jwtService.signAsync(payload);
+  
+    // Defino la duración del token
+    const options = {
+      expiresIn: '1h',
+    };
+  
+    return this.jwtService.signAsync(payload, options);
   }
+  
 }

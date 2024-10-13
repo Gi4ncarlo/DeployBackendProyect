@@ -9,7 +9,7 @@ export class createUserDto {
         required: true,
         minLength: 3,
         maxLength: 80,
-        example: "John Doe", // Example name
+        example: "John Doe", 
     })
     @IsNotEmpty()
     @IsString()
@@ -20,7 +20,7 @@ export class createUserDto {
         type: String,
         description: "Email of the user",
         required: true,
-        example: "johndoe@example.com", // Example email
+        example: "johndoe@example.com", 
     })
     @IsNotEmpty()
     @IsEmail()
@@ -30,7 +30,7 @@ export class createUserDto {
         type: String,
         description: "Password of the user",
         required: true,
-        example: "P@ssw0rd123", // Example password
+        example: "P@ssw0rd123", 
     })
     @Matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[=!@#$%^&*])[A-Za-z\d=!@#$%^&*]{8,15}$/,
@@ -47,7 +47,7 @@ export class createUserDto {
         type: String,
         description: "Password confirmation of the user",
         required: true,
-        example: "P@ssw0rd123", // Example password confirmation
+        example: "P@ssw0rd123", 
     })
     @IsNotEmpty()
     @IsString()
@@ -57,7 +57,7 @@ export class createUserDto {
         type: String,
         description: "Phone number of the user",
         required: true,
-        example: "+1234567890", // Example phone number
+        example: "+1234567890", 
     })
     @IsNotEmpty()
     @IsString()
@@ -69,7 +69,7 @@ export class createUserDto {
         required: true,
         minLength: 5,
         maxLength: 20,
-        example: "USA", // Example country
+        example: "USA", 
     })
     @IsNotEmpty()
     @IsString()
@@ -82,7 +82,7 @@ export class createUserDto {
         required: true,
         minLength: 3,
         maxLength: 80,
-        example: "123 Main St", // Example address
+        example: "123 Main St", 
     })
     @IsNotEmpty()
     @IsString()
@@ -95,11 +95,11 @@ export class createUserDto {
         required: false,
         minLength: 5,
         maxLength: 20,
-        example: "New York", // Example city
+        example: "New York",
     })
     @IsString()
     @Length(5, 20)
     city: string;
 
-    orders_id?: string; // This field can be documented if necessary
+    orders_id?: string; 
 }

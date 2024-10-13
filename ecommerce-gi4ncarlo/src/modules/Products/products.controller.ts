@@ -28,14 +28,13 @@ import { ImageUploadPipe } from 'src/pipes/image-upload/image-upload.pipe';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-
 @ApiBearerAuth()
-@ApiTags("products")
+@ApiTags('products')
 @Controller('products')
 export class productsController {
   constructor(
     private readonly productServic: productsService,
-    private readonly fileUploadService : FileUploadService
+    private readonly fileUploadService: FileUploadService,
   ) {}
 
   @Get()
@@ -52,7 +51,6 @@ export class productsController {
     return { data: products };
   }
 
-
   @UseGuards(AuthGuard)
   @Post()
   @UsePipes(new ValidationPipe())
@@ -67,27 +65,26 @@ export class productsController {
   // }
 
   @UseGuards(AuthGuard)
-  @Post(":id/upload")
+  @Post(':id/upload')
   @HttpCode(200)
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @Param("id") id : string,
-    @UploadedFile(new ImageUploadPipe()) file : Express.Multer.File,
-  ){
-    console.log("En product controller" , id, file.size);
-    
+    @Param('id') id: string,
+    @UploadedFile(new ImageUploadPipe()) file: Express.Multer.File,
+  ) {
+    console.log('En product controller', id, file.size);
+
     return await this.productServic.uploadFile(file, id);
   }
-  
-@UseGuards(AuthGuard)  
-@Get(":id/image")
-@HttpCode(200)
-async getImage(@Param("id") id : string){
-  return this.fileUploadService.getUrl(id);
-}
-
 
   @UseGuards(AuthGuard)
+  @Get(':id/image')
+  @HttpCode(200)
+  async getImage(@Param('id') id: string) {
+    return this.fileUploadService.getUrl(id);
+  }
+  
+  @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   putProductById(): any {
     return 'this.productServic.putProduct()';
@@ -101,17 +98,17 @@ async getImage(@Param("id") id : string){
 
   @Get(':id')
   @HttpCode(200)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   async getProductsById(@Param('id', new ParseUUIDPipe()) id: string) {
-   const product = await this.productServic.getProductById(id);
-   if(!IsUUID(4, { each : true})){
-    throw new HttpException("UUID Invalida", HttpStatus.BAD_REQUEST)
-   }
+    const product = await this.productServic.getProductById(id);
+    if (!IsUUID(4, { each: true })) {
+      throw new HttpException('UUID Invalida', HttpStatus.BAD_REQUEST);
+    }
 
-   if(!product){
-    throw new HttpException("Producto no encontrado", HttpStatus.NOT_FOUND)
-   }
+    if (!product) {
+      throw new HttpException('Producto no encontrado', HttpStatus.NOT_FOUND);
+    }
 
-   return product;
+    return product;
   }
 }

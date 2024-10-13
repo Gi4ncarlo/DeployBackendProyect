@@ -1,28 +1,26 @@
 import {
   Controller,
   Get,
-  Post,
   Put,
   Delete,
   Body,
   Param,
-  Query,
   UseGuards,
   ParseUUIDPipe,
   HttpException,
   HttpStatus,
-  UseInterceptors,
   HttpCode,
   NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UpdateUserDto } from './Dtos/updateUserDto.dto';
 import { AuthGuard } from '../Auth/AuthGuard.guard';
-import { createUserDto } from './Dtos/createUserDto.dto';
 import { IsUUID } from 'class-validator';
 import { authService } from '../Auth/Auth.service';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from './enum/role.enum';
 
 
 @ApiBearerAuth()
@@ -45,14 +43,15 @@ export class userController {
   @Get()
   @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
+  @Roles(Role.Admin)
   async getUsers() {
   return this.userService.getAllUsers(); 
 }
 
-  @Post("signup")
-  async signUp(@Body() loginUser: createUserDto) {
-    return this.authService.signUp(loginUser)
-  }
+  // @Post("signup") COMENTADO PORQUE CREE EL METODO SIGNUP EN EL CONTROLADOR DE AUTH
+  // async signUp(@Body() loginUser: createUserDto) {
+  //   return this.authService.signUp(loginUser)
+  // }
 
   @UseGuards(AuthGuard)
   @Put(':id')
@@ -76,13 +75,17 @@ export class userController {
   @UseGuards(AuthGuard)
   @Get(':id')
   async getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
-    const user = await this.userService.findOneById(id);
+   
     if(!IsUUID(4, { each : true})){
       throw new HttpException("UUID Invalida", HttpStatus.BAD_REQUEST)
     }
+
+    const user = await this.userService.findOneById(id);
+
     if(!user){
       throw new HttpException("Usuario no encontrado", HttpStatus.NOT_FOUND)
     }
+
     return user
   }
 
