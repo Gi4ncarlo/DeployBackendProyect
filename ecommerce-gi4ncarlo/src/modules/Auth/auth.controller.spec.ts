@@ -52,10 +52,10 @@ describe("AuthController", () => {
     });
 
     const mockSignUpUser = new signUpUserDto({
-        name: "Pepe Argento",
+        name: "Pruebas pruebitas",
         password: "123456",
         passwordConfirm: "123456",
-        email : "pepe@gmail.com",
+        email : "pruebas@gmail.com",
         address: "Fake pepe 12",
         phone: "123123123"
     })
@@ -84,4 +84,28 @@ describe("AuthController", () => {
         expect(token).toHaveProperty("token");
         
     })
+
+    it("signUp() should throw an error if email is already in use", async () => {
+        const mockSignUpExistingUser = new signUpUserDto({
+            name: "User",
+            password: "123456",
+            passwordConfirm: "123456",
+            email: "pepe@gmail.com",  // correo existente
+            address: "Fake Address",
+            phone: "123123123"
+        });
+    
+        await expect(controller.signUp(mockSignUpExistingUser)).rejects.toThrow("El usuario ya existe.");
+    });
+
+    it("signIn() should throw an error if email or password is incorrect", async () => {
+        const mockInvalidSignInUser = new SignInUserDto({
+            email: "wrongemail@gmail.com",
+            password: "wrongpassword"
+        });
+    
+        await expect(controller.loginAuth(mockInvalidSignInUser)).rejects.toThrow("User not found");
+    });
+    
+    
 })

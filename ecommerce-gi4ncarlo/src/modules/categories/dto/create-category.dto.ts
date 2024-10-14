@@ -1,20 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, Length } from "class-validator";
+import { IsNotEmpty, IsString, Length, IsOptional, IsArray } from "class-validator";
 
 export class CreateCategoryDto {
-
-    @ApiProperty({
-        type: String,
-        description: "Unique identifier for the category (optional)",
-        example: "eebf07e1-0987-4c8e-b6b2-d327888f2e67", // Example UUID
-        required: false, // As ID can be generated automatically
-    })
-    id: string;
-
     @ApiProperty({
         type: String,
         description: "Name of the category",
-        example: "Electronics", // Example category name
+        example: "Electronics",
         required: true,
     })
     @IsNotEmpty()
@@ -23,10 +14,12 @@ export class CreateCategoryDto {
     name: string;
 
     @ApiProperty({
-        type: [Object],
-        description: "List of products associated with the category",
-        example: [{ id: "2d3a89a4-b9e2-4f68-8e3d-0cb292b67d34", name: "Smartphone" }], // Example product array
-        required: false, // Optional field
+        type: [String],
+        description: "List of product IDs associated with the category",
+        example: ["2d3a89a4-b9e2-4f68-8e3d-0cb292b67d34"],
+        required: false,
     })
-    products: { id: string; name: string }[];
+    @IsOptional()
+    @IsArray()
+    products?: string[]; 
 }
