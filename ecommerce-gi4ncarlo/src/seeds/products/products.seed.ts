@@ -39,6 +39,7 @@ export class ProductsSeed {
                 product.price = productData.price;
                 product.stock = productData.stock;
                 product.category = await this.findCategoryByName(productData.category);
+                product.imgUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdI5h6LZxis-xvMA-mioIFBUdBqrofceIn1A&s";
                 await this.productRepository.save(product)
             }
         }

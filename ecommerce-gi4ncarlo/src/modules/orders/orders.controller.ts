@@ -18,11 +18,13 @@ export class OrdersController {
     return await this.ordersService.create(createOrderDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.ordersService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const order = await this.ordersService.findOne(id);
@@ -36,14 +38,15 @@ export class OrdersController {
     return order
   }
 
-
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
     return this.ordersService.update(id, updateOrderDto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.ordersService.remove(+id);
+    return this.ordersService.remove(id);
   }
 }

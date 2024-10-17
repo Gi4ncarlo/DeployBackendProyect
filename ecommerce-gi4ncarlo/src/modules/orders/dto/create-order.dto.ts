@@ -17,7 +17,7 @@ export class CreateOrderDto {
     userId: string;
 
     @ApiProperty({
-        type: [String],
+        type: Array,
         description: "List of product IDs included in the order",
         required: true,
         example: [{ id: "2d3a89a4-b9e2-4f68-8e3d-0cb292b67d34" }], // Example product IDs

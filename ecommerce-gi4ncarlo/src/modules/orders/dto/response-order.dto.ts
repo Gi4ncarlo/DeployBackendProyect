@@ -3,7 +3,7 @@ import { OrderDetail } from "src/modules/order-details/entities/order-detail.ent
 export class OrderResponseDto {
     id : string;
     price : number;
-    produts : object[];
+    produt : object;
     order : {
         id : string;
         date : Date;
@@ -15,7 +15,7 @@ export class OrderResponseDto {
     constructor(orderDetail : OrderDetail){
         this.id = orderDetail.id;
         this.price = orderDetail.price;
-        this.produts = orderDetail.products;
+        this.produt = orderDetail.products;
         this.order = {
             id : orderDetail.order.id,
             date : orderDetail.order.date,

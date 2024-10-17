@@ -58,15 +58,16 @@ export class OrdersService {
   private async calculateTotal(products : Array<ProductId>) : Promise<number>{
     let total : number = 0;
     for(const product of products) {
-      total += await this.productService.buyProduct(product.id);
+      const price = await this.productService.buyProduct(product.id);
+      total += Number(price)
     }
 
     console.log('Total calculado:', total);
     return total;
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  async findAll() {
+    return await this.ordersRepository.find()
   }
 
   async findOne(id: string) {
@@ -90,7 +91,7 @@ export class OrdersService {
 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async remove(id: string) {
+     return await this.ordersRepository.delete(id)
   }
 }

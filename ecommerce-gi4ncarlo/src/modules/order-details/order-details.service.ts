@@ -28,16 +28,16 @@ export class OrderDetailsService {
     return savedOrderDetail;
   }
 
-  findAll() {
-    return `This action returns all orderDetails`;
+  async findAll() {
+    return await this.orderDetailsRepository.find();
   }
 
   update(id: number, updateOrderDetailDto: UpdateOrderDetailDto) {
     return `This action updates a #${id} orderDetail`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} orderDetail`;
+  async remove(id: string) {
+    return await this.orderDetailsRepository.delete(id)
   }
 
   async findOne(id : string) : Promise<OrderDetail>{

@@ -26,7 +26,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
 import { ImageUploadPipe } from 'src/pipes/image-upload/image-upload.pipe';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Admin } from 'typeorm';
+import { Role } from '../Users/enum/role.enum';
 
 @ApiBearerAuth()
 @ApiTags('products')
@@ -64,10 +67,23 @@ export class productsController {
   //   return this.cloudinaryService.uploadImage(file)
   // }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Post(':id/upload')
-  @HttpCode(200)
+  @Roles(Role.Admin)
+  @HttpCode(HttpStatus.CREATED)
+  @ApiConsumes("multipart/form-data")
   @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({
+    schema:{
+      type: "object",
+      properties:{
+        file:{
+          type: "string",
+          format: "binary"
+        }
+      }
+    }
+  })
   async uploadFile(
     @Param('id') id: string,
     @UploadedFile(new ImageUploadPipe()) file: Express.Multer.File,

@@ -1,5 +1,5 @@
-import { Controller } from "@nestjs/common";
-import { ApiBearerAuth, ApiProperty, ApiTags } from "@nestjs/swagger";
+
+import { ApiProperty} from "@nestjs/swagger";
 import { OrderDetail } from "src/modules/order-details/entities/order-detail.entity";
 import { User } from "src/modules/Users/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
@@ -14,7 +14,7 @@ export class Order {
     @ApiProperty({
         type: String,
         description: "Unique identifier for the order",
-        example: uuid(), // Example value
+        example: uuid(),
     })
     @PrimaryGeneratedColumn("uuid")
     id: string = uuid();
