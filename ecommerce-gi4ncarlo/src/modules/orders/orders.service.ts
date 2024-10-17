@@ -23,34 +23,45 @@ export class OrdersService {
   async create(createOrderDto: CreateOrderDto) {
     const { userId, products } = createOrderDto;
     const user = await this.userService.findOneById(userId);
-
+  
     const order = { 
       user: user,
       date: new Date(),
     };
-
+  
+    // Guarda la entidad de orden
     const orderEntity = await this.ordersRepository.save(
       this.ordersRepository.create(order),
     );
-
+  
+    // Calcula el total de los productos
     const total = await this.calculateTotal(products);
-
+  
+    // Crea y guarda los detalles de la orden
     const orderDetail = new CreateOrderDetailDto();
-
     orderDetail.price = total;
     orderDetail.products = products;
     orderDetail.order = orderEntity;
-
+  
     const orderDetailEntity = await this.orderDetailsService.create(orderDetail);
-
+  
+    // Actualiza la entidad de orden con los detalles
+    orderEntity.orderDetail = orderDetailEntity;
+  
+    // Guarda la entidad de orden actualizada
+    await this.ordersRepository.save(orderEntity);
+  
     return new OrderResponseDto(orderDetailEntity);
   }
+  
 
   private async calculateTotal(products : Array<ProductId>) : Promise<number>{
     let total : number = 0;
     for(const product of products) {
       total += await this.productService.buyProduct(product.id);
     }
+
+    console.log('Total calculado:', total);
     return total;
   }
 

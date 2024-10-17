@@ -18,13 +18,15 @@ import { AuthGuard } from '../Auth/AuthGuard.guard';
 import { IsUUID } from 'class-validator';
 import { authService } from '../Auth/Auth.service';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from './enum/role.enum';
+import { User } from './user.entity';
 
 
 @ApiBearerAuth()
 @ApiTags("users")
+@ApiExtraModels(User)
 @Controller('users')
 export class userController {
   constructor(private readonly userService: UserService,
@@ -55,6 +57,7 @@ export class userController {
 
   @UseGuards(AuthGuard)
   @Put(':id')
+  @HttpCode(200)
   async putUsersById(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -73,6 +76,7 @@ export class userController {
   }
 
   @UseGuards(AuthGuard)
+  @HttpCode(200)
   @Get(':id')
   async getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
    
