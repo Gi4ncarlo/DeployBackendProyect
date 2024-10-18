@@ -5,6 +5,7 @@ import { CategoriesSeed } from './seeds/categories/categories.seed';
 import { ProductsSeed } from './seeds/products/products.seed';
 import { SeedsModule } from './seeds/seeds.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { UsersSeed } from './seeds/users/users.seed';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,9 +31,12 @@ async function bootstrap() {
   await productsSeed.seed();
   console.log("La inserción de productos ha terminado.");
 
+  const usersSeed = app.select(SeedsModule).get(UsersSeed);
+  await usersSeed.seed();
+  console.log("La inserción de Usuarios ha terminado.");
+
 
   console.log('CONECTADO A LA BASE DE DATOS:', process.env.DB_NAME);
-
 
 
   await app.listen(3000);

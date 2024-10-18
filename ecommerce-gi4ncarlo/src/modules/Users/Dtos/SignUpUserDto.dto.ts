@@ -89,6 +89,8 @@ export class signUpUserDto {
     @Length(5, 20)
     city : string;
 
+    administrador? : string;
+
     orders_id? : string;
 
     constructor(partial: Partial<signUpUserDto> ){{
