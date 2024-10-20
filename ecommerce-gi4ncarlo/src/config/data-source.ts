@@ -26,11 +26,11 @@ const PostgresDataSourceOptions: DataSourceOptions = {
   entities: [__dirname + '/../modules/**/*.entity{.ts,.js}',],  
   migrations: [__dirname + '/../migration/*{.ts,.js}'],
   subscribers: [],
-  ssl: false,
+  //ssl: false,
   //dropSchema : true,
-  // ssl: {
-  //   rejectUnauthorized: false, // Esto evita errores en desarrollo si no se confía en el certificado
-  // },
+  ssl: {
+    rejectUnauthorized: false, // Esto evita errores en desarrollo si no se confía en el certificado
+  },
 };
 
 export const PostgresDataSourceConfig = registerAs(
