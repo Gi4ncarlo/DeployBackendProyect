@@ -10,7 +10,7 @@ const SqliteTestDataSourceOptions: DataSourceOptions = {
   type: 'sqlite',
   database: ':memory:',
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  synchronize: true,
+  synchronize: false,
   //dropSchema: true
 };
 
@@ -21,10 +21,10 @@ const PostgresDataSourceOptions: DataSourceOptions = {
   port: parseInt(process.env.DB_PORT, 10),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  synchronize: true,
+  synchronize: false, //CAMBIO A FALSO CUANDO HAGO MIGRACION PARA EVITAR QUE MODIFIQUE SOLO
   logging: true,
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  migrations: ['dist/migration/*{.ts,.js}'],
+  entities: [__dirname + '/../modules/**/*.entity{.ts,.js}',],  
+  migrations: [__dirname + '/../migration/*{.ts,.js}'],
   subscribers: [],
   ssl: false,
   //dropSchema : true,
@@ -45,4 +45,4 @@ export const sqliteDataSourceConfig = registerAs(
 
 export const PostgresDataSource = new DataSource(PostgresDataSourceOptions);
 
-export const SqliteDataSource = new DataSource(SqliteTestDataSourceOptions);
+//export const SqliteDataSource = new DataSource(SqliteTestDataSourceOptions);

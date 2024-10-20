@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, UseInterceptors } from "@nestjs/common";
 import { authService }  from "./Auth.service"
 import { SignInUserDto } from "../Users/Dtos/SignInUserDto.dto";
 import { signUpUserDto } from "../Users/Dtos/SignUpUserDto.dto";
@@ -12,11 +12,6 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 @Controller("auth")
 export class authController {
     constructor(private readonly authServic : authService) {}
-
-    // @Get()
-    // getAuths() : string {
-    //     return this.authServic.getAuths();
-    // }
 
     @Post("/signin")
     loginAuth(@Body() userSignIn : SignInUserDto ): any{

@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { createUserDto } from './Dtos/createUserDto.dto';
+import { Role } from './enum/role.enum';
 
 @Injectable()
 export class UserService {
@@ -28,8 +29,12 @@ export class UserService {
     
     async createUser(user: createUserDto): Promise <User> { //DEBE RETORNAR EL ID DEL USER CREADO ? 
         
+        user.administrador = user.administrador || Role.User;
         const newUser = await this.userRepository.create(user)
       
+        //const savedUser = await this.userRepository.save(newUser)
+        //return savedUser.id
+        
         return await this.userRepository.save(newUser)
     }
 

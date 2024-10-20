@@ -5,9 +5,11 @@ import { Product } from './product.entity';
 import { Repository } from 'typeorm';
 import { UploadFileDto } from 'src/file-upload/dtos/UploadFile.dto';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
+import { UpdateProductDto } from './Dtos/updateProductDto.dto';
 
 @Injectable()
 export class productsService {
+
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
@@ -49,6 +51,18 @@ export class productsService {
 
     console.log('Producto comprado exitosamente');
     return product.price;
+  }
+
+  async updateProduct(id: string, updateProductDto: UpdateProductDto) {
+    const producto = this.productRepository.findOneBy({id})
+
+    if(!producto){
+      return null
+    }
+
+    await this.productRepository.update(id, updateProductDto)
+
+    return await this.productRepository.findOneBy({id})
   }
 
   async uploadFile(file : UploadFileDto, id : string){

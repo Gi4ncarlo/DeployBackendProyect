@@ -16,6 +16,7 @@ import {
   UseInterceptors,
   UploadedFile,
   HttpCode,
+  NotFoundException,
 } from '@nestjs/common';
 import { productsService } from './products.service';
 import { AuthGuard } from '../Auth/AuthGuard.guard';
@@ -30,6 +31,7 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Admin } from 'typeorm';
 import { Role } from '../Users/enum/role.enum';
+import { UpdateProductDto } from './Dtos/updateProductDto.dto';
 
 @ApiBearerAuth()
 @ApiTags('products')
@@ -101,9 +103,15 @@ export class productsController {
   }
   
   @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Put(':id')
-  putProductById(): any {
-    return 'this.productServic.putProduct()';
+  async putProductById(@Param("id") id: string, @Body() updateProductDto : UpdateProductDto
+  ): Promise<any> {
+    const productActualizado = await this.productServic.updateProduct(id, updateProductDto);
+    if (!productActualizado) {
+      throw new NotFoundException('Producto no encontrado');
+    }
+    return productActualizado;
   }
 
   @UseGuards(AuthGuard)

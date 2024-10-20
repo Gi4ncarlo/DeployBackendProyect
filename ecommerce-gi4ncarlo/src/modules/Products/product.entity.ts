@@ -1,4 +1,4 @@
-import { ApiBearerAuth, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -10,7 +10,6 @@ import {
 import { v4 as uuid } from 'uuid';
 import { Category } from '../categories/entities/category.entity';
 import { OrderDetail } from '../order-details/entities/order-detail.entity';
-import { Controller } from '@nestjs/common';
 
 
 @Entity({
@@ -81,4 +80,5 @@ export class Product {
   @ManyToMany(() => OrderDetail, (orderDetail) => orderDetail.products)
   @JoinTable() // Necessary to define the join table in ManyToMany relations
   orderDetails: OrderDetail[];
+
 }

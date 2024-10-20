@@ -1,7 +1,7 @@
 
 import { ApiProperty} from "@nestjs/swagger";
-import { OrderDetail } from "src/modules/order-details/entities/order-detail.entity";
-import { User } from "src/modules/Users/user.entity";
+import { OrderDetail } from '../../order-details/entities/order-detail.entity';
+import { User } from "../../../modules/Users/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
 
@@ -41,4 +41,5 @@ export class Order {
     @OneToOne(() => OrderDetail, (orderDetail) => orderDetail.order)
     @JoinColumn() // Necessary to define the column that contains the foreign key
     orderDetail: OrderDetail;
+
 }

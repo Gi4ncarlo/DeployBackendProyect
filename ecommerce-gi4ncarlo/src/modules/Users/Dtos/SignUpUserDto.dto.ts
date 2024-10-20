@@ -89,6 +89,14 @@ export class signUpUserDto {
     @Length(5, 20)
     city : string;
 
+
+    @ApiProperty({
+        type: String,
+        description : "Role of the user admin/user/superAdmin",
+        required : false,
+    })
+    @IsString()
+    @Length(4, 20)
     administrador? : string;
 
     orders_id? : string;
