@@ -23,7 +23,7 @@ export class Order {
         type: () => User,
         description: "User who placed the order",
     })
-    @ManyToOne(() => User, (user) => user.orders)
+    @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' }) //CON CASCADE EVITO PROBLEMAS AL ELIMINAR CON LA RELACION
     user: User;
 
     @ApiProperty({
@@ -38,7 +38,7 @@ export class Order {
         type: () => OrderDetail,
         description: "Details of the order",
     })
-    @OneToOne(() => OrderDetail, (orderDetail) => orderDetail.order)
+    @OneToOne(() => OrderDetail, (orderDetail) => orderDetail.order, { onDelete: 'CASCADE' })
     @JoinColumn() // Necessary to define the column that contains the foreign key
     orderDetail: OrderDetail;
 

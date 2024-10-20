@@ -77,7 +77,7 @@ export class Product {
     type: () => [OrderDetail],
     description: 'Order details associated with the product',
   })
-  @ManyToMany(() => OrderDetail, (orderDetail) => orderDetail.products)
+  @ManyToMany(() => OrderDetail, (orderDetail) => orderDetail.products, { onDelete: 'CASCADE' })
   @JoinTable() // Necessary to define the join table in ManyToMany relations
   orderDetails: OrderDetail[];
 

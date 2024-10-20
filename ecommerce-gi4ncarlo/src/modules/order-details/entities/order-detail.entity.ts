@@ -29,7 +29,7 @@ export class OrderDetail {
     type: Order,
     description: "Order associated with the order detail",
   })
-  @OneToOne(() => Order, (order) => order.orderDetail)
+  @OneToOne(() => Order, (order) => order.orderDetail, { onDelete: 'CASCADE' })
   @JoinColumn()
   order: Order;
 
@@ -37,6 +37,6 @@ export class OrderDetail {
     type:Array<Product>,
     description: "List of products associated with the order detail",
   })
-  @ManyToMany(() => Product, (product) => product.orderDetails)
+  @ManyToMany(() => Product, (product) => product.orderDetails, { onDelete: 'CASCADE' })
   products: Product[];
 }
